@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Become a Driver</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+    input:focus {
+      border-color: #25D366;
+      box-shadow: 0px 0px 5px rgba(37, 211, 102, 0.5);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #25D366;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1ebe5d;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>Become a Driver</h2>
+  <form id="driverForm">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" placeholder="Enter your name" required>
+
+    <label for="mobile">Mobile Number</label>
+    <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
+
+    <label for="email">Email Address</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
+
+    <label for="license">Driving License No.</label>
+    <input type="text" id="license" placeholder="Enter license number" required>
+
+    <label for="experience">Experience (years)</label>
+    <input type="number" id="experience" placeholder="e.g. 5" required>
+
+    <button type="submit">Submit via WhatsApp</button>
+  </form>
+</div>
+
+<script>
+document.getElementById('driverForm').onsubmit = function(e) {
+    e.preventDefault();
+    var name = document.getElementById('name').value;
+    var mobile = document.getElementById('mobile').value;
+    var email = document.getElementById('email').value;
+    var license = document.getElementById('license').value;
+    var experience = document.getElementById('experience').value;
+
+    var message = `*Become a Driver Form*%0A👤 Name: ${name}%0A📞 Mobile: ${mobile}%0A📧 Email: ${email}%0A🪪 License: ${license}%0A🚗 Experience: ${experience} years`;
+    
+    var whatsappNumber = '+917702580211'; // Replace with your WhatsApp number (country code + number)
+    var url = `https://wa.me/${whatsappNumber}?text=${message}`;
+    window.open(url, '_blank');
+};
+</script>
+
+</body>
+</html>
