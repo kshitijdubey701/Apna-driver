@@ -959,14 +959,13 @@
   <script src="vendor/swiper/swiper-bundle.min.js"></script>
   <script src="vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
   <script src="vendor/isotope-layout/isotope.pkgd.min.js"></script>
-  {% comment %} <script >const scriptURL = 'https://script.google.com/macros/s/AKfycbwdchEPEpAyRmEocU4phhgZqcGKpF87fBL8H5fIfg1du8Wd7voVIa-w-nqTVYj_60S8/exec'; {% endcomment %}
-  {% comment %} </script> {% endcomment %}
+  
   <!-- Main JS File -->
   <script src="js/main.js"></script>
   
 
   <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxCUtwHyQTVLjpGgR2o-QQF8-_lpvp4pg-36kLdSZIZ9ac5AT2oeASTpjuCayyxh_9z/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbzkHsUjQj3iqH3unGrgRjL3N9epBxR9Is16ONQRq5m3xqGmlViIKq0xLqS2LR5Tb5MM/exec";
 const form = document.getElementById("bookingForm");
 const loading = document.querySelector(".loading");
 const sentMessage = document.querySelector(".sent-message");
@@ -1004,39 +1003,7 @@ form.addEventListener("submit", e => {
 
 
 </script>
-<script>
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
-}
 
-function showPosition(position) {
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
-  const locationInput = document.getElementById("location");
-  locationInput.value = `https://www.google.com/maps?q=${latitude},${longitude}`;
-}
-
-function showError(error) {
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-      alert("⚠️ User denied the request for Geolocation.");
-      break;
-    case error.POSITION_UNAVAILABLE:
-      alert("⚠️ Location information is unavailable.");
-      break;
-    case error.TIMEOUT:
-      alert("⚠️ The request to get user location timed out.");
-      break;
-    case error.UNKNOWN_ERROR:
-      alert("⚠️ An unknown error occurred.");
-      break;
-  }
-}
-</script>
 
 
 </body>
