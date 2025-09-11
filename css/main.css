@@ -2044,3 +2044,106 @@ section,
 .starter-section {
   /* Add your styles here */
 }
+
+/* Form container */
+#bookingForm {
+  background: var(--surface-color);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: var(--default-font);
+  transition: 0.3s ease-in-out;
+}
+
+#bookingForm input,
+#bookingForm select,
+#bookingForm textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--default-color), transparent 70%);
+  border-radius: 10px;
+  font-size: 15px;
+  margin-bottom: 15px;
+  color: var(--default-color);
+  background: color-mix(in srgb, var(--background-color), transparent 10%);
+  transition: 0.3s ease;
+}
+
+#bookingForm input:focus,
+#bookingForm select:focus,
+#bookingForm textarea:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 8px rgba(36, 135, 206, 0.25);
+  outline: none;
+  background: #fff;
+}
+
+/* GPS Button */
+#bookingForm button[type="button"] {
+  background: var(--accent-color);
+  color: var(--contrast-color);
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#bookingForm button[type="button"]:hover {
+  background: color-mix(in srgb, var(--accent-color), transparent 20%);
+}
+
+/* Submit button with glow effect */
+#bookingForm button[type="submit"] {
+  background: linear-gradient(135deg, var(--accent-color), #00bfff);
+  border: none;
+  padding: 14px 28px;
+  color: var(--contrast-color);
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  margin-top: 10px;
+  box-shadow: 0 4px 12px rgba(36, 135, 206, 0.4);
+}
+
+#bookingForm button[type="submit"]:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(36, 135, 206, 0.6);
+}
+
+/* Messages */
+#bookingForm .loading {
+  font-weight: bold;
+  color: var(--default-color);
+}
+
+#bookingForm .sent-message {
+  color: #059652;
+  font-weight: bold;
+  padding-top: 10px;
+}
+
+#bookingForm .error-message {
+  color: #df1529;
+  font-weight: bold;
+  padding-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .booking-section {
+    padding: 40px 20px;
+  }
+  #bookingForm {
+    padding: 20px;
+  }
+  #bookingForm button[type="submit"] {
+    width: 100%;
+  }
+}
+
+
+
