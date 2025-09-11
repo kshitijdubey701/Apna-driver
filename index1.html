@@ -12,7 +12,129 @@
     content="Book trusted drivers on demand in Jabalpur. Choose from hourly, daily or pickup & drop plans. Reliable, affordable & professional driver service.">
   <meta name="keywords"
     content="driver on demand Jabalpur, car driver service, book driver Jabalpur, Apna Driver, hourly driver, pickup drop driver">
-  <!-- Favicons -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://apnadriver.com/#website",
+      "url": "https://apnadriver.com/",
+      "name": "Apna Driver",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://apnadriver.com/search?q={query}",
+        "query-input": "required name=query"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://apnadriver.com/#organization",
+      "name": "Apna Driver",
+      "url": "https://apnadriver.com/",
+      "logo": "https://apnadriver.com/img/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/ApnaDriver",
+        "https://www.instagram.com/ApnaDriver",
+        "https://www.twitter.com/ApnaDriver"
+      ]
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://apnadriver.com/#localbusiness",
+      "name": "Apna Driver",
+      "image": "https://apnadriver.com/static/og/apna-driver-og.jpg",
+      "telephone": "+91-8989811258",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Bargi Hills",
+        "addressLocality": "Jabalpur",
+        "addressRegion": "Madhya Pradesh",
+        "postalCode": "482001",
+        "addressCountry": "IN"
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Jabalpur"
+      },
+      "url": "https://apnadriver.com/",
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "name": "3 Hours Driver",
+          "priceCurrency": "INR",
+          "price": "399",
+          "description": "Hire a professional driver for 3 hours"
+        },
+        {
+          "@type": "Offer",
+          "name": "10 Hours Driver",
+          "priceCurrency": "INR",
+          "price": "899",
+          "description": "Hire a driver for 10 hours"
+        },
+        {
+          "@type": "Offer",
+          "name": "12 Hours Driver",
+          "priceCurrency": "INR",
+          "price": "999",
+          "description": "Hire a driver for 12 hours"
+        },
+        {
+          "@type": "Offer",
+          "name": "24 Hours Driver",
+          "priceCurrency": "INR",
+          "price": "1499",
+          "description": "Hire a driver for 24 hours"
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "name": "On-Demand Driver Service",
+      "provider": {
+        "@id": "https://apnadriver.com/#organization"
+      },
+      "areaServed": {
+        "@type": "City",
+        "name": "Jabalpur"
+      },
+      "serviceType": ["Hourly Driver", "Outstation Driver", "Pickup & Drop Driver"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How to book a driver in Jabalpur?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can book directly on our website, call us, or WhatsApp for instant driver booking in Jabalpur."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are drivers verified?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, all drivers are identity-verified, experienced, and trained for safe travel."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the driver charges?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our plans start at ₹399 for 3 hours, ₹899 for 10 hours, ₹999 for 12 hours, and ₹1499 for 24 hours."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<!-- Favicons -->
   <link href="img/favicon.png" rel="icon">
   <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
 
@@ -689,6 +811,7 @@
         <div class="container">
 
           <div class="row g-4 g-lg-0">
+            
 
             <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
               <div class="pricing-item">
@@ -839,7 +962,15 @@
         </div> End Google Maps -->
 
           <div class="row gy-4">
-
+            <img src="img/scanner.jpg" 
+                alt="Apna driver" 
+                 style="max-width:250px; border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.12); margin-right:30px; margin-bottom:50px;">
+            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+              <i class="bi bi-clock flex-shrink-0"></i>
+              <div>
+                <h3>Working Hours</h3>
+                <p>24 Hours <br>7 days a week</p>
+              </div>
             <div class="col-lg-4">
               <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
                 <i class="bi bi-geo-alt flex-shrink-0"></i>
@@ -885,16 +1016,6 @@
                   <div class="col-md-6">
                     <input type="time" name="time" class="form-control" required>
                   </div>
-
-                  <div class="col-md-6">
-                    <input type="time" name="time2" class="form-control" required>
-                  </div>
-                  <div>
-                    <input type="text" id="location" name="location" placeholder="Enter Pickup Location or use GPS"
-                      required>
-                    <button type="button" onclick="getLocation()">📍 Use My Location</button>
-                  </div>
-
                   <div class="col-md-6">
                     <select name="drive_plan" class="form-control" required>
                       <option value="">Select Drive Plan</option>
@@ -904,8 +1025,16 @@
                       <option value="pickup_drop">🚌 12 Hour Outstatin Tour – ₹1499<< /option>
                     </select>
                   </div>
+                  
+                  <div>
+                    <input type="text" id="location" name="location" placeholder="Enter Pickup Location or use GPS"
+                      required>
+                    <button type="button" onclick="getLocation()">📍 Use My Location</button>
+                  </div>
+
+                  
                   <div class="col-md-12">
-                    <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+                    <textarea class="form-control" name="message" rows="1" placeholder="Message" required></textarea>
                   </div>
 
                   <div class="col-md-12 text-center">
