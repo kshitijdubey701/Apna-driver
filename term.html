@@ -1,104 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Become a Driver</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>Apna Driver – Terms & Conditions | अपना ड्राइवर नियम व शर्तें</title>
+
+  <!-- ✅ SEO (English & Hindi) -->
+  <meta name="description" content="Apna Driver Terms & Conditions for customers: duty plans, overtime, payments, cancellations, safety, and company policies in Jabalpur & across India. अपना ड्राइवर नियम व शर्तें: ड्यूटी प्लान, ओवरटाइम, भुगतान, कैंसिलेशन, सुरक्षा और कंपनी पॉलिसी।" />
+  <meta name="keywords" content="Apna Driver, Terms and Conditions, Driver on Demand, Jabalpur driver service, Personal Driver India, Safe Driving Service, अपना ड्राइवर, नियम व शर्तें, जबलपुर ड्राइवर सर्विस" />
+
+  <!-- ✅ Open Graph -->
+  <meta property="og:title" content="Apna Driver – Terms & Conditions | अपना ड्राइवर नियम व शर्तें" />
+  <meta property="og:description" content="Read Apna Driver customer terms: duty plans, overtime, payments, cancellations, safety rules, and policies. जबलपुर व भारत के लिए ड्राइवर सेवा।" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://apanadriver.in/terms" />
+  <meta property="og:image" content="https://apanadriver.in/images/logo.png" />
+
+  <!-- ✅ Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Apna Driver – Terms & Conditions | अपना ड्राइवर नियम व शर्तें" />
+  <meta name="twitter:description" content="Customer terms for Apna Driver services in English & Hindi: duty plans, overtime, payments, cancellations, and safety." />
+  <meta name="twitter:image" content="https://apanadriver.in/images/driver-og.jpg" />
+
+  <link rel="icon" href="img/favicon.png" />
+
+  <!-- ✅ Styles -->
   <style>
+    :root {
+      --primary: #d32b2b;   /* Brand Red */
+      --dark: #1e1e1e;
+      --light: #fff;
+      --grey: #fafafa;
+      --border: #ddd;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--grey);
+      color: var(--dark);
+      line-height: 1.7;
+    }
+
+    /* ✅ Sticky Header with Logo */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--light);
+      border-bottom: 3px solid var(--primary);
+      padding: 10px 20px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      justify-content: center;
     }
-    .form-container {
-      background: white;
-      padding: 25px;
+    header img {
+      max-height: 60px;
+    }
+
+    /* ✅ Page Wrap */
+    .wrap {
+      max-width: 950px;
+      margin: 30px auto;
+      background: var(--light);
+      padding: 30px;
       border-radius: 12px;
-      box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
-      width: 350px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      animation: fadeIn 0.5s ease-in-out;
     }
-    .form-container h2 {
-      text-align: center;
-      margin-bottom: 20px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    h2 {
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-top: 30px;
+      border-left: 5px solid var(--primary);
+      padding-left: 12px;
+    }
+    ul, ol {
+      margin: 12px 0 12px 25px;
+    }
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* ✅ Highlighted Notes */
+    .note {
+      background: #fff3f3;
+      border-left: 5px solid var(--primary);
+      padding: 12px 15px;
+      margin: 18px 0;
       color: #333;
+      border-radius: 6px;
+      font-size: 0.95rem;
     }
-    label {
-      font-weight: bold;
-      display: block;
-      margin: 10px 0 5px;
+
+    /* ✅ Footer */
+    footer {
+      margin-top: 35px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
     }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      outline: none;
-      font-size: 14px;
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
     }
-    input:focus {
-      border-color: #25D366;
-      box-shadow: 0px 0px 5px rgba(37, 211, 102, 0.5);
+
+    /* ✅ Print Button */
+    .btn-print {
+      display: inline-block;
+      background: var(--primary);
+      color: var(--light);
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-top: 20px;
+      transition: background 0.3s;
     }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #25D366;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
+    .btn-print:hover {
+      background: #a32020;
     }
-    button:hover {
-      background: #1ebe5d;
+
+    @media print {
+      header, .btn-print { display: none; }
+      body { background: #fff; }
+      .wrap { box-shadow: none; border: 1px solid #aaa; }
     }
   </style>
 </head>
 <body>
 
-<div class="form-container">
-  <h2>Become a Driver</h2>
-  <form id="driverForm">
-    <label for="name">Full Name</label>
-    <input type="text" id="name" placeholder="Enter your name" required>
+  <!-- ✅ Logo Header -->
+  <header>
+    <a href="/"><img src="img/logo.png" alt="Apna Driver Logo"></a>
+  </header>
 
-    <label for="mobile">Mobile Number</label>
-    <input type="tel" id="mobile" placeholder="Enter your mobile number" required>
+  <!-- ✅ Main Content -->
+  <div class="wrap">
+    <h1>Apna Driver – Terms &amp; Conditions (ग्राहकों हेतु नियम व शर्तें)</h1>
+    <p><em>Last updated: 27 Aug 2025</em></p>
 
-    <label for="email">Email Address</label>
-    <input type="email" id="email" placeholder="Enter your email" required>
+    <h2>1. Booking & Duty Hours</h2>
+    <ul>
+      <li><strong>3 Hours Plan</strong> – Short trips within Jabalpur city.</li>
+      <li><strong>10 Hours Plan</strong> – Ideal for a full working day or extended travel.</li>
+      <li><strong>12 Hours Plan</strong> – Flexible long duty for longer daily requirements.</li>
+      <li><strong>24 Hours Plan</strong> – Round-the-clock driver service for one full day.</li>
+    </ul>
+    <p class="note"><strong>Overtime:</strong> If the service exceeds booked hours, overtime charges of ₹99 per hour will apply.</p>
 
-    <label for="license">Driving License No.</label>
-    <input type="text" id="license" placeholder="Enter license number" required>
+    <h2>2. Charges & Payment</h2>
+    <ol>
+      <li>Duty charges include the driver’s fee and company service fee.</li>
+      <li>Overtime Charges – ₹99 per hour after booked duty plan ends.</li>
+      <li>Payment – Must be made immediately after duty ends (Cash, UPI, or digital mode).</li>
+      <li>No bargaining or reduction of charges after booking confirmation.</li>
+    </ol>
 
-    <label for="experience">Experience (years)</label>
-    <input type="number" id="experience" placeholder="e.g. 5" required>
+    <h2>3. Booking Cancellation</h2>
+    <ol>
+      <li>Advance payment is mandatory at the time of booking.</li>
+      <li>If customer cancels after paying, ₹99 cancellation fee will be deducted.</li>
+      <li>If company cancels, full advance refund will be provided.</li>
+    </ol>
 
-    <button type="submit">Submit via WhatsApp</button>
-  </form>
-</div>
+    <h2>4. Customer Responsibility</h2>
+    <ol>
+      <li>Provide accurate booking details (pickup, drop, timing, vehicle type).</li>
+      <li>Treat drivers respectfully; no illegal or unsafe use of service.</li>
+      <li>Customer is responsible for personal belongings.</li>
+      <li>Ensure vehicle has valid insurance, registration & fuel before duty.</li>
+    </ol>
 
-<script>
-document.getElementById('driverForm').onsubmit = function(e) {
-    e.preventDefault();
-    var name = document.getElementById('name').value;
-    var mobile = document.getElementById('mobile').value;
-    var email = document.getElementById('email').value;
-    var license = document.getElementById('license').value;
-    var experience = document.getElementById('experience').value;
+    <h2>5. Safety & Conduct</h2>
+    <ol>
+      <li>Customers must cooperate and behave safely.</li>
+      <li>Drivers will never drive under the influence of alcohol, drugs, or unsafe conditions.</li>
+      <li>Misbehavior or unsafe requests may terminate service without refund.</li>
+    </ol>
 
-    var message = `*Become a Driver Form*%0A👤 Name: ${name}%0A📞 Mobile: ${mobile}%0A📧 Email: ${email}%0A🪪 License: ${license}%0A🚗 Experience: ${experience} years`;
-    
-    var whatsappNumber = '+917702580211'; // Replace with your WhatsApp number (country code + number)
-    var url = `https://wa.me/${whatsappNumber}?text=${message}`;
-    window.open(url, '_blank');
-};
-</script>
+    <h2>6. Company Rights</h2>
+    <ol>
+      <li>Apna Driver reserves the right to accept or reject bookings.</li>
+      <li>Bookings may be rescheduled or canceled due to emergencies.</li>
+      <li>The company may update duty plans, charges, or policies at any time.</li>
+    </ol>
 
+    <h2>7. Disclaimer</h2>
+    <ol>
+      <li>Apna Driver only provides trained drivers, not vehicles.</li>
+      <li>Vehicle, documents, fuel, and fines are customer’s responsibility.</li>
+      <li>The company is not responsible for accidents or damages due to vehicle condition.</li>
+    </ol>
+
+    <h2>🚦 Safety Message</h2>
+    <p class="note"><strong>Safety First –</strong> All accidents are preventable. Please follow traffic rules and cooperate with our drivers for a safe experience with Apna Driver.</p>
+
+    <a href="javascript:window.print()" class="btn-print">🖨 Print this Page</a>
+
+    <footer>
+      By booking Apna Driver services, you agree to these Terms & Conditions.<br>
+      📧 Contact us: <a href="mailto:support@apanadriver.in">support@apanadriver.in</a>
+    </footer>
+  </div>
 </body>
 </html>
