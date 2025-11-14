@@ -123,6 +123,7 @@ if ("serviceWorker" in navigator) {
           <li><a href="#hero" class="active">Home<br></a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
+          <li><a href="blog.html">Blog</a></li>
           <li><a href="driver.html">Become a driver</a></li>
           <!--<li><a href="#portfolio">Portfolio</a></li> -->
           <li><a href="term.html">Term and condition</a></li>          
@@ -137,118 +138,118 @@ if ("serviceWorker" in navigator) {
 
   <main class="main">
       <!-- Contact Section -->
-    <section id="contact" class="contact section">
+<section id="contact" class="contact section">
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Book a Driver</h2>
-        <p>Book a professional driver in India within minutes – safe, reliable & affordable.</p>
-      </div><!-- End Section Title -->
+  <!-- Section Title -->
+  <div class="container section-title" data-aos="fade-up">
+    <h2>Book a Driver</h2>
+    <p>Book a professional driver in India within minutes – safe, reliable & affordable.</p>
+  </div><!-- End Section Title -->
 
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
+  <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <!--<div class="mb-4" data-aos="fade-up" data-aos-delay="200">
-          <iframe style="border:0; width: 100%; height: 270px;" src="<iframe src="https://www.google.com/maps/place/India,+Madhya+Pradesh/@23.1758315,79.8863503,12z/data=!3m1!4b1!4m6!3m5!1s0x3981ae1a0fb6a97d:0x44020616bc43e3b9!8m2!3d23.1685786!4d79.9338798!16zL20vMDJkcm5r?entry=ttu&g_ep=EgoyMDI1MDgxOC4wIKXMDSoASAFQAw%3D%3D" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>" frameborder="0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></iframe>
-        </div> End Google Maps -->
+    <div class="row gy-4">
 
-        <div class="row gy-4">
+      <div class="col-lg-8">
+        <form id="bookingForm" data-aos-delay="200">
+          <div class="row gy-4">
+            <div class="col-md-6">
+              <input type="text" name="name" placeholder="Your Name" autocomplete="name" required>
+            </div>
+            <div class="col-md-6">
+              <input type="email" name="email" placeholder="Your Email" required>
+            </div>
+            <div class="col-md-6">
+              <input type="text" name="phone" placeholder="Your phone number" autocomplete="tel" required>
+            </div>
+            <div class="col-md-6">
+              <input type="date" name="date" required>
+            </div>
+            <div class="col-md-6">
+              <input type="time" name="time" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <select name="drive_plan" class="form-control" required>
+                <option value="">Select Drive Plan</option>
+                <option value="3hr_city">🚕 3 Hours City Tour – ₹399</option>
+                <option value="10hr_full">🚖 10 Hours Full Day – ₹899</option>
+                <option value="12hr_outstation">🚌 12 Hours city tours – ₹999</option>
+                <option value="pickup_drop">🚌 12 Hours Outstation Tours – ₹7 Per/km</option>
+              </select>
+            </div>
 
-          <div class="col-lg-8">
-            <form id="bookingForm" data-aos-delay="200">
-              <div class="row gy-4">
-                <div class="col-md-6">
-                  <input type="text" name="name" placeholder="Your Name"  autocomplete="name" required>
-                </div>
-                <div class="col-md-6">
-                  <input type="email" name="email" placeholder="Your Email"  required>
-                </div>
-                <div class="col-md-6">
-                  <input type="text" name="phone" placeholder="Your phone number"  autocomplete="tel" required>
-                </div>
-                <div class="col-md-6">
-                  <input type="date" name="date"   required>
-                </div>
-                <div class="col-md-6">
-                 <input type="time" name="time" class="form-control"  required>
-                </div>
-                <div class="col-md-6">
-                  <select name="drive_plan" class="form-control" required>
-                    <option value="">Select Drive Plan</option>
-                     <option value="3hr_city">🚕 3 Hours City Tour – ₹399</option>
-                     <option value="10hr_full">🚖 10 Hours Full Day – ₹899</option>
-                     <option value="12hr_outstation">🚌 12 Hours city tours. – ₹999</option>
-                     <option value="pickup_drop">🚌 12 Hours Outstation Tours. – ₹ 7 Per/km</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <input type="text" id="location"  name="location" placeholder="Enter Pickup Location or use GPS" required>
-                  <button type="button" onclick="getLocation()">📍 Use My Location</button>
-                </div>
+            <div class="col-md-6">
+              <select name="vehicle_type" class="form-control" required>
+                <option value="">Select Vehicle Type</option>
+                <option value="automatic">Automatic Car</option>
+                <option value="manual">Manual Car</option>
+                <option value="without_clutch">Gearless / Without Clutch Car</option>
+                <option value="bike">Bike</option>
+                <option value="bus">Bus</option>
+                <option value="truck">Truck</option>
+              </select>
+            </div>
 
+            <div>
+              <input type="text" id="location" name="location" placeholder="Enter Pickup Location or use GPS" required>
+              <button type="button" onclick="getLocation()">📍 Use My Location</button>
+            </div>
 
-                <div class="col-md-12">
-                  <textarea class="form-control" name="message"  placeholder="Message" required></textarea>
-                </div>
+            <div class="col-md-12">
+              <textarea class="form-control" name="message" placeholder="Message" required></textarea>
+            </div>
 
-                <div class="col-md-12 text-center">
-                  <div class="loading" style="display:none;">Loading...</div>
-                  <div class="error-message" style="color:red;"></div>
-                  <div class="sent-message" style="display:none;">For Confirming call once. Thank you!</div>
-                  <button type="submit">Send Message</button>
-                </div>
-              </div>
-            </form>
-
-          </div><!-- End Contact Form -->         
-
-          <div class="col-lg-4">
-            <img src="img/scanner.jpg" 
-                alt="Apna driver" 
-                 style="max-width:250px; border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.12); margin-right:30px; margin-bottom:50px;" loading="lazy">
-
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
-              <i class="bi bi-clock flex-shrink-0"></i>
-              <div>
-                <h3>Working Hours</h3>
-                <p>24 Hours <br>7 days a week</p>
-              </div>
-            </div><!-- End Info Item -->
-
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-              <i class="bi bi-geo-alt flex-shrink-0"></i>
-              <div>
-                <h3>Address</h3>
-                <p>Madan Mahal India Madhya Pradesh</p>
-              </div>
-            </div><!-- End Info Item -->
-
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-              <i class="bi bi-telephone flex-shrink-0"></i>
-              <div>
-                <h3>Call Us</h3>
-                <p>+91 8989811258</p>
-              </div>
-            </div><!-- End Info Item -->
-
-            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
-              <i class="bi bi-envelope flex-shrink-0"></i>
-              <div>
-                <h3>Email Us</h3>
-                <p>Apna.driver@gmail.com</p>
-              </div>
-            </div><!-- End Info Item -->
-
+            <div class="col-md-12 text-center">
+              <div class="loading" style="display:none;">Loading...</div>
+              <div class="error-message" style="color:red;"></div>
+              <div class="sent-message" style="display:none;">For Confirming call once. Thank you!</div>
+              <button type="submit">Send Message</button>
+            </div>
           </div>
+        </form>
+      </div><!-- End Contact Form -->         
 
+      <div class="col-lg-4">
+        <img id="scannerImg" src="img/scanner.jpg" 
+            alt="Apna driver" 
+            style="max-width:250px; border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.12); margin-right:30px; margin-bottom:50px;" loading="lazy">
 
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+          <i class="bi bi-clock flex-shrink-0"></i>
+          <div>
+            <h3>Working Hours</h3>
+            <p>24 Hours <br>7 days a week</p>
+          </div>
+        </div><!-- End Info Item -->
 
-        </div>
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+          <i class="bi bi-geo-alt flex-shrink-0"></i>
+          <div>
+            <h3>Address</h3>
+            <p>Madan Mahal Madhya Pradesh India </p>
+          </div>
+        </div><!-- End Info Item -->
 
-        </div>
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+          <i class="bi bi-telephone flex-shrink-0"></i>
+          <div>
+            <h3>Call Us</h3>
+            <p>+91 8989811258</p>
+          </div>
+        </div><!-- End Info Item -->
 
-    </section><!-- /Contact Section -->
+        <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="500">
+          <i class="bi bi-envelope flex-shrink-0"></i>
+          <div>
+            <h3>Email Us</h3>
+            <p>Apna.driver@gmail.com</p>
+          </div>
+        </div><!-- End Info Item -->
 
+      </div>
+    </div>
+  </div>
+</section><!-- /Contact Section -->
     <!-- Hero Section -->
     <section id="hero" class="hero section">
 
@@ -907,6 +908,7 @@ if ("serviceWorker" in navigator) {
               `Time: ${data.time} - ${data.time2}\n` +
               `Location: ${data.location}\n` +
               `Drive Plan: ${data.drive_plan}\n` +
+              `vehicle_type: ${data.vehicle_type}\n` +
               `Message: ${data.message}`
             );
             // Change number as needed
@@ -955,6 +957,85 @@ if ("serviceWorker" in navigator) {
     }
   </script>
 
+
+
+<script>
+const upiVpa = '8989811258@ybl';
+const payeeName = 'Apna Driver';
+const transactionNote = 'Driver Payment';
+const currency = 'INR';
+const amount = '';
+
+function buildUpiLink() {
+  const params = new URLSearchParams();
+  params.set('pa', upiVpa);
+  params.set('pn', payeeName);
+  params.set('tn', transactionNote);
+  params.set('am', amount);
+  params.set('cu', currency);
+  return 'upi://pay?' + params.toString();
+}
+
+function buildQrSrc(upiLink) {
+  return 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(upiLink);
+}
+
+function openUpiOrFallback() {
+  const upiLink = buildUpiLink();
+  const qrSrc = buildQrSrc(upiLink);
+
+  if (!document.getElementById('upiFallbackModal')) {
+    const modalHtml = `
+      <div id="upiFallbackModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px;">
+        <div style="background:#fff;border-radius:10px;max-width:420px;width:100%;padding:18px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.2)">
+          <h3 style="margin:0 0 8px;">Pay Apna Driver</h3>
+          <p style="margin:0 0 12px;">If your phone didn't open a UPI app automatically, scan the QR or copy the UPI ID below to pay.</p>
+          <img id="upiQrImg" src="${qrSrc}" alt="UPI QR" style="width:220px;height:220px;border-radius:6px;margin-bottom:12px">
+          <div style="word-break:break-all;margin-bottom:12px;font-weight:600;">${upiVpa}</div>
+          <div style="display:flex;gap:8px;justify-content:center">
+            <button id="upiCopyBtn" style="padding:8px 12px;border-radius:6px;border:1px solid #ddd;cursor:pointer">Copy UPI ID</button>
+            <a href="${upiLink}" id="upiOpenAgain" style="padding:8px 12px;border-radius:6px;background:#d32b2b;color:#fff;text-decoration:none">Open UPI App</a>
+            <button id="upiCloseBtn" style="padding:8px 12px;border-radius:6px;border:1px solid #ddd;cursor:pointer">Close</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    document.getElementById('upiCloseBtn').addEventListener('click', () => {
+      document.getElementById('upiFallbackModal').style.display = 'none';
+    });
+    document.getElementById('upiCopyBtn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(upiVpa);
+        alert('UPI ID copied to clipboard');
+      } catch (e) {
+        alert('Copy failed. Please select and copy: ' + upiVpa);
+      }
+    });
+  }
+
+  const now = Date.now();
+  window.location.href = upiLink;
+
+  setTimeout(() => {
+    if (document.visibilityState === 'visible' && Date.now() - now > 1000) {
+      const modal = document.getElementById('upiFallbackModal');
+      if (modal) modal.style.display = 'flex';
+    }
+  }, 1200);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const scanner = document.getElementById('scannerImg');
+  if (scanner) {
+    scanner.style.cursor = 'pointer';
+    scanner.addEventListener('click', (e) => {
+      e.preventDefault();
+      openUpiOrFallback();
+    });
+  }
+});
+</script>
 
 </body>
 
