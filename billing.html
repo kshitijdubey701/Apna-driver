@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Driver Booking — Final Billing System</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{ --primary:#0d6efd; --muted:#6c757d; }
+    body{ font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:#f6f8fb; padding-bottom:48px; }
+    .card{ border-radius:10px; }
+    .invoice-box{ background:#fff; border-radius:8px; padding:12px; box-shadow:0 6px 16px rgba(13,110,253,0.04); color:#222; }
+    .logo{ max-height:56px; }
+    .small-muted{ color:var(--muted); font-size:.85rem; }
+    .table-invoice th{ background:#fafbfc; border-bottom:1px solid #eee; font-size:0.95rem; }
+    .table-invoice td{ font-size:0.95rem; vertical-align:middle; }
+    .qr-img{ max-width:150px; border-radius:6px; background:#fff; padding:6px; border:1px solid #eee; }
+    .pdf-container{ width:210mm; min-height:297mm; box-sizing:border-box; padding:8mm; background:#fff; }
+    @media print{
+      body{ background:#fff; }
+      .no-print{ display:none !important; }
+      .invoice-box{ box-shadow:none !important; padding:8px; }
+    }
+    .no-break, .invoice-box, .invoice-table-row { page-break-inside: avoid; break-inside: avoid; -webkit-page-break-inside: avoid; }
+    @media (max-width:576px){
+      .logo{ max-height:46px; }
+      .invoice-box{ padding:10px; }
+      .qr-img{ max-width:130px; }
+      .table-invoice th, .table-invoice td{ font-size:0.92rem; }
+    }
+    .invoice-box * { line-height:1.12; }
+    /* Compact admin table action spacing */
+    .admin-actions .btn{ padding: .25rem .5rem; font-size: .8rem; }
+    /* Pagination controls */
+    .pagination-controls { display:flex; gap:.5rem; align-items:center; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+
+<div class="container py-3">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <div class="d-flex align-items-center gap-2">
+      <img src="https://www.apnadrivers.com/img/logo.png" class="logo" alt="Apna Drivers">
+      <div>
+        <div class="fw-bold">Apna Drivers</div>
+        <div class="small-muted">Trusted Drivers On-Demand</div>
+      </div>
+    </div>
+
+    <div class="no-print">
+      <button class="btn btn-sm btn-outline-secondary me-1" id="openAdminBtn">Admin Panel</button>
+      <button class="btn btn-sm btn-outline-primary" onclick="window.print()">Print</button>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Form -->
+    <div class="col-lg-5">
+      <div class="card p-3">
+        <h6 class="mb-2">Create Invoice</h6>
+
+        <div class="mb-2">
+          <label class="form-label small">Order ID</label>
+          <div class="input-group input-group-sm">
+            <input id="orderId" class="form-control" readonly>
+            <button class="btn btn-outline-secondary btn-sm" onclick="generateOrderId()">Generate</button>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label small">Plan</label>
+          <select id="planDropdown" class="form-select form-select-sm" onchange="onPlanChange()">
+            <option value="">— Select Plan —</option>
+            <option value="Short City Tour|399|3 Hours">Short City Tour — ₹399 (3 hrs)</option>
+            <option value="Business Plan|899|10 Hours">Business Plan — ₹899 (10 hrs)</option>
+            <option value="City Tour|999|12 Hours">City Tour — ₹999 (12 hrs)</option>
+            <option value="Full Day Package|1599|24 Hours">Full Day — ₹1599 (24 hrs)</option>
+            <option value="Airport Transfer|499|2 Hours">Airport Transfer — ₹499 (2 hrs)</option>
+          </select>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-6">
+            <label class="form-label small">Base (₹)</label>
+            <input id="basePrice" class="form-control form-control-sm" readonly>
+          </div>
+          <div class="col-6">
+            <label class="form-label small">OT hrs</label>
+            <input id="overtime" type="number" class="form-control form-control-sm" value="0" min="0" oninput="recalcTotal()">
+          </div>
+          <div class="col-6">
+            <label class="form-label small">OT rate</label>
+            <input id="otRate" class="form-control form-control-sm" value="99" readonly>
+          </div>
+          <div class="col-6">
+            <label class="form-label small">Extras (₹)</label>
+            <input id="extras" class="form-control form-control-sm" value="0" oninput="recalcTotal()">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small">Total (₹)</label>
+            <input id="totalAmount" class="form-control form-control-sm fw-bold" oninput="onManualTotalEdit()">
+            <div class="form-text small-muted">Editable for discounts / adjustments.</div>
+          </div>
+        </div>
+
+        <hr class="my-2">
+
+        <label class="form-label small">Customer Name</label>
+        <input id="customerName" class="form-control form-control-sm mb-2" placeholder="Customer name">
+
+        <label class="form-label small">Contact</label>
+        <input id="customerContact" class="form-control form-control-sm mb-2" placeholder="Mobile / WhatsApp">
+
+        <label class="form-label small">Address</label>
+        <textarea id="customerAddress" class="form-control form-control-sm mb-2" rows="2" placeholder="Address (optional)"></textarea>
+
+        <div class="d-grid gap-2 mt-2">
+          <button class="btn btn-sm btn-success" onclick="prepareInvoice()">Preview & Generate QR</button>
+          <div class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-primary w-50" onclick="saveBooking()">Save</button>
+            <button class="btn btn-sm btn-warning w-50" onclick="downloadPDF()">Download PDF</button>
+          </div>
+          <button class="btn btn-sm btn-info text-white" onclick="shareWhatsApp()">Share WhatsApp</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="col-lg-7">
+      <div id="invoiceBox" class="invoice-box p-2 no-break">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <img src="https://www.apnadrivers.com/img/logo.png" class="logo" alt="logo">
+            <div class="small-muted mt-1">Apna Drivers Pvt. Ltd.</div>
+            <div class="small-muted">Reg. No: 123456 | GSTIN: 09ABCDE1234F1Z5</div>
+          </div>
+          <div class="text-end">
+            <div class="small-muted">Invoice</div>
+            <div id="previewOrderId" class="text-primary fw-bold">—</div>
+            <div class="small-muted" id="previewDate"></div>
+          </div>
+        </div>
+
+        <div class="row mb-2">
+          <div class="col-6">
+            <div class="small-muted">Billed To</div>
+            <div id="previewCustomerName" class="fw-bold">—</div>
+            <div id="previewCustomerContact" class="small-muted">—</div>
+            <div id="previewCustomerAddress" class="small-muted">—</div>
+          </div>
+          <div class="col-6 text-end">
+            <div class="small-muted">From</div>
+            <div class="fw-bold">Apna Drivers Pvt. Ltd.</div>
+            <div class="small-muted">12 Sector Road, City, State, PIN</div>
+            <div class="small-muted">Phone: +91 98765 43210</div>
+          </div>
+        </div>
+
+        <table class="table table-borderless table-invoice mb-1">
+          <thead><tr>
+            <th style="width:60%">Description</th>
+            <th class="text-end">Qty</th>
+            <th class="text-end">Rate (₹)</th>
+            <th class="text-end">Amount (₹)</th>
+          </tr></thead>
+          <tbody id="invoiceItems">
+            <tr><td colspan="4" class="small-muted text-center">No plan selected</td></tr>
+          </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-start mt-2">
+          <div>
+            <div class="small-muted">Payment</div>
+            <div class="d-flex gap-2 align-items-center mt-2">
+              <img id="qrPreview" class="qr-img" src="" style="display:none" alt="QR">
+              <div>
+                <div class="fw-bold">UPI ID: <span class="text-primary">bhanupratapbiswas@ptyes</span></div>
+                <div class="small-muted">Note: Scan QR or use UPI ID to pay exact amount</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-end">
+            <div class="small-muted">Subtotal</div>
+            <div class="fw-bold fs-5">₹ <span id="previewTotal">0</span></div>
+            <div class="small-muted mt-1">Status: <span id="paymentStatus" class="badge bg-secondary">Pending</span></div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <div class="small-muted">Customer Signature</div>
+          <div style="height:56px; border:1px dashed #e6e6e6; border-radius:6px; padding:6px; background:#fafafa;">
+            <div id="signaturePlaceholder" class="small-muted">Sign here (print & sign)</div>
+          </div>
+        </div>
+
+        <div class="mt-2 small-muted">Thank you for choosing Apna Drivers. For queries contact +91 98765 43210</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="modal fade" id="adminModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Admin Panel — Local Storage</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Login -->
+        <div id="adminLoginSection">
+          <div class="mb-3">
+            <label class="form-label">Enter Admin Password</label>
+            <input id="adminPasswordInput" type="password" class="form-control" placeholder="Password">
+          </div>
+          <div>
+            <button class="btn btn-primary" onclick="adminLogin()">Login</button>
+            <small class="text-muted ms-2">Default: <strong>admin123</strong></small>
+          </div>
+        </div>
+
+        <!-- Panel -->
+        <div id="adminPanelSection" style="display:none;">
+          <div class="d-flex justify-content-between align-items-center mb-3 gap-2">
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline-danger" onclick="clearAllBookings()">Clear All</button>
+              <button class="btn btn-sm btn-outline-secondary" onclick="exportBookingsCSV()">Export CSV</button>
+            </div>
+
+            <div class="d-flex gap-2 align-items-center">
+              <div class="pagination-controls">
+                <label class="small-muted m-0">Page size:</label>
+                <select id="adminPageSize" class="form-select form-select-sm" onchange="loadBookingsToAdmin()" style="width:80px">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="25">25</option>
+                </select>
+              </div>
+              <input id="searchBooking" class="form-control form-control-sm" placeholder="Search order id, customer" oninput="loadBookingsToAdmin()" style="min-width:260px">
+            </div>
+          </div>
+
+          <div id="bookingsList" class="table-responsive" style="max-height:55vh; overflow:auto;"></div>
+
+          <div class="d-flex justify-content-between align-items-center mt-2">
+            <div id="adminPagination" class="d-flex gap-2 align-items-center"></div>
+            <div><small class="text-muted">Total: <span id="adminTotalCount">0</span></small></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="adminLogoutBtn" style="display:none;" class="btn btn-outline-secondary" onclick="adminLogout()">Logout</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mark Paid Confirmation Modal -->
+<div class="modal fade" id="markPaidModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header"><h5 class="modal-title">Confirm Payment</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <p id="markPaidText">Mark order as paid?</p>
+        <div class="mb-2">
+          <label class="form-label">Transaction ID (optional)</label>
+          <input id="txnIdInput" class="form-control form-control-sm" placeholder="Enter transaction ID or UPI reference">
+        </div>
+        <div class="form-text small-muted">This information will be saved with the booking and included in CSV export.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-success" id="markPaidConfirmBtn">Mark Paid</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- libs -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+/* ---------------- Configuration ---------------- */
+const STORAGE_KEY = 'apna_driver_bookings_final_v1';
+const ADMIN_PASSWORD = 'admin123';
+const UPI_ID = 'bhanupratapbiswas@ptyes';
+
+/* ---------------- DOM Refs ---------------- */
+const orderIdEl = document.getElementById('orderId');
+const planDropdown = document.getElementById('planDropdown');
+const basePriceEl = document.getElementById('basePrice');
+const overtimeEl = document.getElementById('overtime');
+const otRateEl = document.getElementById('otRate');
+const extrasEl = document.getElementById('extras');
+const totalAmountEl = document.getElementById('totalAmount');
+
+const cName = document.getElementById('customerName');
+const cContact = document.getElementById('customerContact');
+const cAddress = document.getElementById('customerAddress');
+
+const previewOrderId = document.getElementById('previewOrderId');
+const previewDate = document.getElementById('previewDate');
+const previewCustomerName = document.getElementById('previewCustomerName');
+const previewCustomerContact = document.getElementById('previewCustomerContact');
+const previewCustomerAddress = document.getElementById('previewCustomerAddress');
+const invoiceItemsEl = document.getElementById('invoiceItems');
+const previewTotalEl = document.getElementById('previewTotal');
+const qrPreview = document.getElementById('qrPreview');
+const paymentStatusEl = document.getElementById('paymentStatus');
+
+const adminModalEl = document.getElementById('adminModal');
+const adminModal = new bootstrap.Modal(adminModalEl);
+const markPaidModalEl = document.getElementById('markPaidModal');
+const markPaidModal = new bootstrap.Modal(markPaidModalEl);
+
+/* Admin state for pagination & marking paid */
+let adminCurrentPage = 1;
+let adminCurrentMarkOrderId = null;
+
+/* ---------------- Helpers ---------------- */
+function pad(n, w=4){ n=''+n; return n.length>=w? n : new Array(w-n.length+1).join('0') + n; }
+function nowText(){ return new Date().toLocaleString(); }
+function escapeHtml(s=''){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+/* ---------------- Order ID ---------------- */
+function generateOrderId(){
+  const now = new Date();
+  const yyyy = now.getFullYear(), mm = pad(now.getMonth()+1,2), dd = pad(now.getDate(),2);
+  const rnd = Math.floor(Math.random()*9000)+1000;
+  const id = `ORD-${yyyy}${mm}${dd}-${rnd}`;
+  orderIdEl.value = id;
+  return id;
+}
+
+/* ---------------- Plan & Totals ---------------- */
+function onPlanChange(){
+  const v = planDropdown.value;
+  if(!v){ basePriceEl.value=''; invoiceItemsEl.innerHTML = `<tr><td colspan="4" class="small-muted text-center">No plan selected</td></tr>`; recalcTotal(); return; }
+  const [name, price, info] = v.split('|');
+  basePriceEl.value = Number(price);
+  invoiceItemsEl.innerHTML = `
+    <tr class="invoice-table-row">
+      <td>${escapeHtml(name)} <div class="small-muted">${escapeHtml(info||'')}</div></td>
+      <td class="text-end">1</td>
+      <td class="text-end">₹ ${Number(price)}</td>
+      <td class="text-end">₹ ${Number(price)}</td>
+    </tr>`;
+  recalcTotal();
+}
+
+function recalcTotal(){
+  const base = Number(basePriceEl.value || 0);
+  const ot = Number(overtimeEl.value || 0);
+  const rate = Number(otRateEl.value || 99);
+  const extras = Number(extrasEl.value || 0);
+  const total = base + (ot * rate) + extras;
+  totalAmountEl.value = Math.round(total);
+  previewTotalEl.textContent = totalAmountEl.value || '0';
+}
+
+function onManualTotalEdit(){
+  previewTotalEl.textContent = totalAmountEl.value || '0';
+}
+
+/* ---------------- Invoice preview and QR ---------------- */
+function prepareInvoice(){
+  if(!orderIdEl.value) generateOrderId();
+  const plan = planDropdown.value;
+  const total = Number(totalAmountEl.value || 0);
+  if(!plan){ alert('Select a plan'); return; }
+  if(!total || total<=0){ alert('Enter a valid total'); return; }
+
+  previewOrderId.textContent = orderIdEl.value;
+  previewDate.textContent = nowText();
+  previewCustomerName.textContent = cName.value || '—';
+  previewCustomerContact.textContent = cContact.value || '—';
+  previewCustomerAddress.textContent = cAddress.value || '—';
+
+  // create high-res QR
+  const upiURL = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent('Apna Drivers')}&am=${total}&cu=INR&tn=${encodeURIComponent(orderIdEl.value)}`;
+  qrPreview.src = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(upiURL)}`;
+  qrPreview.style.display = 'inline-block';
+
+  paymentStatusEl.className = 'badge bg-secondary';
+  paymentStatusEl.textContent = 'Pending';
+}
+
+/* ---------------- Save booking (localStorage) ---------------- */
+function saveBooking(){
+  if(!orderIdEl.value) generateOrderId();
+  const planVal = planDropdown.value;
+  if(!planVal){ alert('Choose a plan'); return; }
+  prepareInvoice();
+
+  const booking = {
+    id: orderIdEl.value,
+    createdAt: new Date().toISOString(),
+    plan: planVal.split('|')[0],
+    planRaw: planVal,
+    base: Number(basePriceEl.value || 0),
+    overtime: Number(overtimeEl.value || 0),
+    otRate: Number(otRateEl.value || 99),
+    extras: Number(extrasEl.value || 0),
+    total: Number(totalAmountEl.value || 0),
+    customerName: cName.value || '',
+    customerContact: cContact.value || '',
+    customerAddress: cAddress.value || '',
+    upi: UPI_ID,
+    paymentVerified: false,
+    paymentTxId: '',
+    paymentTimestamp: ''
+  };
+
+  const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  arr.unshift(booking);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  alert('Booking saved locally with Order ID: ' + booking.id);
+}
+
+/* ---------------- PDF generation (clone visible invoice) ---------------- */
+function downloadPDF(){
+  if(!orderIdEl.value) generateOrderId();
+  prepareInvoice();
+
+  const img = qrPreview;
+  if(img.src && !img.complete){
+    img.addEventListener('load', () => createPdfFromInvoice());
+    img.addEventListener('error', () => createPdfFromInvoice());
+  } else {
+    createPdfFromInvoice();
+  }
+}
+
+function createPdfFromInvoice(){
+  const invoiceEl = document.getElementById('invoiceBox');
+  const clone = invoiceEl.cloneNode(true);
+
+  // compact logo & QR for PDF
+  clone.querySelectorAll('img.logo').forEach(l => l.style.maxHeight = '48px');
+  clone.querySelectorAll('#qrPreview').forEach(q => q.style.maxWidth = '140px');
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'pdf-container';
+  wrapper.appendChild(clone);
+
+  const opt = {
+    margin: [6, 6, 6, 6],
+    filename: `${orderIdEl.value || 'invoice'}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, allowTaint: false, scrollX: 0, scrollY: -window.scrollY, windowWidth: 800 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css'] }
+  };
+
+  html2pdf().set(opt).from(wrapper).save().catch(err => {
+    console.error('PDF generation error', err);
+    alert('PDF generation failed. See console.');
+  });
+}
+
+/* ---------------- WhatsApp share ---------------- */
+function shareWhatsApp(){
+  if(!orderIdEl.value) generateOrderId();
+  const total = Number(totalAmountEl.value || 0);
+  if(!total || total<=0){ alert('Enter valid total first'); return; }
+  const text = `Order: ${orderIdEl.value}\nCustomer: ${cName.value || '—'}\nPlan: ${planDropdown.value ? planDropdown.value.split('|')[0] : '—'}\nTotal: ₹${total}\nPay via UPI: ${UPI_ID}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+/* ---------------- Admin Panel (login, table, pagination, actions) ---------------- */
+document.getElementById('openAdminBtn').addEventListener('click', () => {
+  adminModal.show();
+});
+
+function adminLogin(){
+  const pw = document.getElementById('adminPasswordInput').value;
+  if(pw === ADMIN_PASSWORD){
+    document.getElementById('adminLoginSection').style.display = 'none';
+    document.getElementById('adminPanelSection').style.display = 'block';
+    document.getElementById('adminLogoutBtn').style.display = 'inline-block';
+    adminCurrentPage = 1;
+    loadBookingsToAdmin();
+  } else {
+    alert('Wrong password');
+  }
+}
+
+function adminLogout(){
+  document.getElementById('adminLoginSection').style.display = 'block';
+  document.getElementById('adminPanelSection').style.display = 'none';
+  document.getElementById('adminLogoutBtn').style.display = 'none';
+  document.getElementById('adminPasswordInput').value = '';
+}
+
+/* load bookings with pagination & search */
+function loadBookingsToAdmin(){
+  const q = document.getElementById('searchBooking').value?.toLowerCase?.() || '';
+  const pageSize = Number(document.getElementById('adminPageSize').value || 10);
+  const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+  // sort newest first
+  arr.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  const filtered = arr.filter(b => {
+    if(!q) return true;
+    return (b.id||'').toLowerCase().includes(q) ||
+           (b.customerName||'').toLowerCase().includes(q) ||
+           (b.customerContact||'').toLowerCase().includes(q) ||
+           (b.plan||'').toLowerCase().includes(q);
+  });
+
+  const total = filtered.length;
+  const pages = Math.max(1, Math.ceil(total / pageSize));
+  if(adminCurrentPage > pages) adminCurrentPage = pages;
+
+  const start = (adminCurrentPage - 1) * pageSize;
+  const pageItems = filtered.slice(start, start + pageSize);
+
+  const container = document.getElementById('bookingsList');
+  if(!pageItems.length){
+    container.innerHTML = '<div class="alert alert-info">No saved bookings.</div>';
+  } else {
+    let html = `<table class="table table-sm align-middle">
+      <thead><tr>
+        <th>Order</th><th>Customer</th><th>Plan</th><th>Total</th><th>Date</th><th>Verified</th><th>Actions</th>
+      </tr></thead><tbody>`;
+
+    pageItems.forEach(b => {
+      html += `<tr>
+        <td style="min-width:140px">${escapeHtml(b.id)}</td>
+        <td>${escapeHtml(b.customerName || '—')}<br><small class="text-muted">${escapeHtml(b.customerContact || '—')}</small></td>
+        <td>${escapeHtml(b.plan || b.planRaw?.split?.('|')?.[0] || '—')}</td>
+        <td>₹${Number(b.total || 0)}</td>
+        <td>${new Date(b.createdAt).toLocaleString()}</td>
+        <td>${b.paymentVerified ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-secondary">No</span>'}</td>
+        <td class="admin-actions" style="white-space:nowrap">
+          <button class="btn btn-sm btn-outline-success me-1" onclick='promptMarkPaid("${b.id}")'>Mark Paid</button>
+          <button class="btn btn-sm btn-outline-primary me-1" onclick='adminExportSingle("${b.id}")'>Export</button>
+          <button class="btn btn-sm btn-outline-danger" onclick='adminDelete("${b.id}")'>Delete</button>
+        </td>
+      </tr>`;
+    });
+
+    html += `</tbody></table>`;
+    container.innerHTML = html;
+  }
+
+  // pagination UI
+  const paginationEl = document.getElementById('adminPagination');
+  const totalCountEl = document.getElementById('adminTotalCount');
+  totalCountEl.textContent = total;
+
+  // build page buttons
+  let paginationHtml = '';
+  if(pages <= 1){
+    paginationHtml = `<small class="text-muted">Page 1 of ${pages}</small>`;
+  } else {
+    paginationHtml = `<div class="btn-group btn-group-sm" role="group">`;
+    paginationHtml += `<button class="btn btn-outline-secondary" ${adminCurrentPage===1 ? 'disabled' : ''} onclick="adminPrevPage()">Prev</button>`;
+    paginationHtml += `<button class="btn btn-outline-secondary" ${adminCurrentPage===pages ? 'disabled' : ''} onclick="adminNextPage()">Next</button>`;
+    paginationHtml += `</div>`;
+    paginationHtml += `<small class="text-muted ms-2">Page ${adminCurrentPage} of ${pages}</small>`;
+  }
+  paginationEl.innerHTML = paginationHtml;
+}
+
+/* pagination helpers */
+function adminPrevPage(){ if(adminCurrentPage>1) { adminCurrentPage--; loadBookingsToAdmin(); } }
+function adminNextPage(){ adminCurrentPage++; loadBookingsToAdmin(); }
+
+/* delete booking */
+function adminDelete(id){
+  if(!confirm('Delete booking ' + id + '?')) return;
+  let arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  arr = arr.filter(x => x.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  loadBookingsToAdmin();
+}
+
+/* prompt Mark Paid: open modal and set current id */
+function promptMarkPaid(id){
+  adminCurrentMarkOrderId = id;
+  document.getElementById('txnIdInput').value = '';
+  document.getElementById('markPaidText').textContent = `Mark ${id} as paid? (optional transaction ID)`;
+  markPaidModal.show();
+}
+
+/* confirm mark paid (modal button) */
+document.getElementById('markPaidConfirmBtn').addEventListener('click', () => {
+  const tx = document.getElementById('txnIdInput').value.trim();
+  if(!adminCurrentMarkOrderId){ alert('No order selected'); markPaidModal.hide(); return; }
+  let arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const idx = arr.findIndex(x => x.id === adminCurrentMarkOrderId);
+  if(idx === -1){ alert('Order not found'); markPaidModal.hide(); return; }
+
+  arr[idx].paymentVerified = true;
+  arr[idx].paymentTxId = tx || '';
+  arr[idx].paymentTimestamp = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  markPaidModal.hide();
+  alert('Marked as paid: ' + adminCurrentMarkOrderId);
+  adminCurrentMarkOrderId = null;
+  loadBookingsToAdmin();
+});
+
+/* clear all bookings */
+function clearAllBookings(){
+  if(!confirm('Clear ALL saved bookings?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  loadBookingsToAdmin();
+}
+
+/* export all to CSV (includes paymentTxId & paymentTimestamp) */
+function exportBookingsCSV(){
+  const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  if(!arr.length){ alert('No bookings to export'); return; }
+  const header = ['id','customerName','customerContact','customerAddress','plan','base','overtime','otRate','extras','total','upi','createdAt','paymentVerified','paymentTxId','paymentTimestamp'];
+  const rows = arr.map(b => header.map(h => `"${(b[h]||'').toString().replace(/"/g,'""')}"`).join(','));
+  const csv = [header.join(','), ...rows].join('\n');
+  downloadString(csv, `bookings_${Date.now()}.csv`, 'text/csv');
+}
+
+/* export single booking */
+function adminExportSingle(id){
+  const arr = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  const b = arr.find(x => x.id === id);
+  if(!b){ alert('Not found'); return; }
+  const header = ['id','customerName','customerContact','customerAddress','plan','base','overtime','otRate','extras','total','upi','createdAt','paymentVerified','paymentTxId','paymentTimestamp'];
+  const csv = header.join(',') + '\n' + header.map(h => `"${(b[h]||'').toString().replace(/"/g,'""')}"`).join(',');
+  downloadString(csv, `${b.id}.csv`, 'text/csv');
+}
+
+/* utility: download string as file */
+function downloadString(text, filename, mime){
+  const blob = new Blob([text], { type: mime || 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; document.body.appendChild(a);
+  a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+/* ---------------- Initialization ---------------- */
+(function init(){
+  // initial preview date
+  previewDate.textContent = nowText();
+  previewTotalEl.textContent = '0';
+  generateOrderId();
+
+  // live preview updates
+  totalAmountEl.addEventListener('input', () => previewTotalEl.textContent = totalAmountEl.value || '0');
+  cName.addEventListener('input', () => previewCustomerName.textContent = cName.value || '—');
+  cContact.addEventListener('input', () => previewCustomerContact.textContent = cContact.value || '—');
+  cAddress.addEventListener('input', () => previewCustomerAddress.textContent = cAddress.value || '—');
+
+  // admin page size default
+  document.getElementById('adminPageSize').value = 10;
+})();
+</script>
+</body>
+</html>
